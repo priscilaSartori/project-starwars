@@ -1,10 +1,18 @@
-import React from 'react';
+import React, { useState } from 'react';
 import useFetch from '../hooks/useFetch';
 
 function Table() {
+  const [filtro, setFiltro] = useState([]);
   const { planetas } = useFetch();
   return (
     <div>
+      <input
+        data-testid="name-filter"
+        type="text"
+        name="filtro"
+        value={ filtro }
+        onChange={ ({ target }) => setFiltro(target.value) }
+      />
       <table>
         <thead>
           <tr>
@@ -24,23 +32,25 @@ function Table() {
           </tr>
         </thead>
         <tbody>
-          {planetas.map((planeta) => (
-            <tr key={ planeta.name }>
-              <td>{planeta.name}</td>
-              <td>{planeta.rotation_period}</td>
-              <td>{planeta.orbital_period}</td>
-              <td>{planeta.diameter}</td>
-              <td>{planeta.climate}</td>
-              <td>{planeta.gravity}</td>
-              <td>{planeta.terrain}</td>
-              <td>{planeta.surface_water}</td>
-              <td>{planeta.population}</td>
-              <td>{planeta.films}</td>
-              <td>{planeta.created}</td>
-              <td>{planeta.edited}</td>
-              <td>{planeta.url}</td>
-            </tr>
-          ))}
+          {planetas
+            .filter((linha) => linha.name.includes(filtro))
+            .map((planeta) => (
+              <tr key={ planeta.name }>
+                <td>{planeta.name}</td>
+                <td>{planeta.rotation_period}</td>
+                <td>{planeta.orbital_period}</td>
+                <td>{planeta.diameter}</td>
+                <td>{planeta.climate}</td>
+                <td>{planeta.gravity}</td>
+                <td>{planeta.terrain}</td>
+                <td>{planeta.surface_water}</td>
+                <td>{planeta.population}</td>
+                <td>{planeta.films}</td>
+                <td>{planeta.created}</td>
+                <td>{planeta.edited}</td>
+                <td>{planeta.url}</td>
+              </tr>
+            ))}
         </tbody>
       </table>
     </div>
