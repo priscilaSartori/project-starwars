@@ -9,19 +9,19 @@ function Table() {
   const [filtrado, setFiltrado] = useState([]);
   const newArray = filtrado.length === 0 ? planetas : filtrado;
 
-  const filtraDados = () => {
+  const filtraDados = (newFiltro) => {
     const filtroColuna = selected.column;
     const filtroNumero = selected.number;
     if (selected.comparison === 'maior que') {
       setFiltrado(
-        planetas.filter((planeta) => Number(planeta[filtroColuna]) > filtroNumero),
+        newFiltro.filter((planeta) => Number(planeta[filtroColuna]) > filtroNumero),
       );
     } if (selected.comparison === 'menor que') {
       setFiltrado(
-        planetas.filter((planeta) => Number(planeta[filtroColuna]) < filtroNumero),
+        newFiltro.filter((planeta) => Number(planeta[filtroColuna]) < filtroNumero),
       );
     } if (selected.comparison === 'igual a') {
-      setFiltrado(planetas
+      setFiltrado(newFiltro
         .filter((planeta) => Number(planeta[filtroColuna]) === Number(filtroNumero)));
     }
   };
@@ -81,7 +81,8 @@ function Table() {
           type="button"
           name="filtro"
           onClick={ () => {
-            filtraDados();
+            const newFiltro = filtrado.length === 0 ? planetas : filtrado;
+            filtraDados(newFiltro);
             setSelected({ column: 'population', comparison: 'maior que', number: '0' });
           } }
         >
