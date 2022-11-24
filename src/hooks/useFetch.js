@@ -2,15 +2,17 @@ import { useEffect, useState } from 'react';
 
 export default function useFetch() {
   const [planetas, setPlanetas] = useState([]);
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     const fetchData = async () => {
       const response = await fetch('https://swapi.dev/api/planets');
       const data = await response.json();
       setPlanetas(data.results);
+      setLoading(false);
     };
     fetchData();
   }, []);
 
-  return { planetas };
+  return { loading, planetas };
 }

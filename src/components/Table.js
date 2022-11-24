@@ -2,14 +2,33 @@ import React, { useState } from 'react';
 import useFetch from '../hooks/useFetch';
 
 function Table() {
-  const { planetas } = useFetch();
+  const { loading, planetas } = useFetch();
   const [filtro, setFiltro] = useState([]);
-  const [selected, setSelected] = useState({ column: 0, comparison: 0, number: 0 });
-  console.log(selected);
-  const [selectedFilters, setSelectedFilters] = useState([]);
-  console.log(selectedFilters);
+  const [selected, setSelected] = useState({
+    column: 'population', comparison: 'maior que', number: '0' });
+  const [filtrado, setFiltrado] = useState([]);
+  const newArray = filtrado.length === 0 ? planetas : filtrado;
+
+  const filtraDados = () => {
+    const filtroColuna = selected.column;
+    const filtroNumero = selected.number;
+    if (selected.comparison === 'maior que') {
+      setFiltrado(
+        planetas.filter((planeta) => Number(planeta[filtroColuna]) > filtroNumero),
+      );
+    } if (selected.comparison === 'menor que') {
+      setFiltrado(
+        planetas.filter((planeta) => Number(planeta[filtroColuna]) < filtroNumero),
+      );
+    } if (selected.comparison === 'igual a') {
+      setFiltrado(planetas
+        .filter((planeta) => Number(planeta[filtroColuna]) === Number(filtroNumero)));
+    }
+  };
+
   return (
     <div>
+      { loading && <h1>Carregando...</h1> }
       <form>
         <input
           data-testid="name-filter"
@@ -55,18 +74,15 @@ function Table() {
           value={ selected.number }
           onChange={ ({ target }) => setSelected((
             prevSelected,
-          ) => ({ ...prevSelected, number: Number(target.value) })) }
+          ) => ({ ...prevSelected, number: target.value })) }
         />
         <button
           data-testid="button-filter"
-          type="submit"
+          type="button"
           name="filtro"
-          // onChange={ setSelectedFilters(selected) }
           onClick={ () => {
-            setSelectedFilters((prevSelected) => ([
-              ...prevSelected, selected,
-            ]));
-          // setSelected({ column: 0, comparison: 0, numero: 0 });
+            filtraDados();
+            setSelected({ column: 'population', comparison: 'maior que', number: '0' });
           } }
         >
           Filtrar
@@ -91,9 +107,8 @@ function Table() {
           </tr>
         </thead>
         <tbody>
-          {planetas
+          {newArray
             .filter((linha) => linha.name.includes(filtro))
-            // .filter((linha) => console.log(Object.keys(linha)))
             .map((planeta) => (
               <tr key={ planeta.name }>
                 <td>{planeta.name}</td>
@@ -103,8 +118,8 @@ function Table() {
                 <td>{planeta.climate}</td>
                 <td>{planeta.gravity}</td>
                 <td>{planeta.terrain}</td>
-                <td>{planeta.surface_water === 'unknown' ? 0 : planeta.surface_water}</td>
-                <td>{planeta.population === 'unknown' ? 0 : planeta.population}</td>
+                <td>{planeta.surface_water}</td>
+                <td>{planeta.population}</td>
                 <td>{planeta.films}</td>
                 <td>{planeta.created}</td>
                 <td>{planeta.edited}</td>
