@@ -3,11 +3,18 @@ import useFetch from '../hooks/useFetch';
 
 function Table() {
   const { loading, planetas } = useFetch();
-  const [filtro, setFiltro] = useState([]);
+  const [filtro, setFiltro] = useState([]); // mudança no input nome
   const [selected, setSelected] = useState({
-    column: 'population', comparison: 'maior que', number: '0' });
-  const [filtrado, setFiltrado] = useState([]);
+    column: 'population', comparison: 'maior que', number: '0' }); // mudança no input column, comparison e number
+  const [historySelected, setHistorySelected] = useState([]); // armazena os filtros selecionados
+  const [filtrado, setFiltrado] = useState([]); // seleciona info dos filtros
   const newArray = filtrado.length === 0 ? planetas : filtrado;
+  const [optionsColumn, setColunasOptions] = useState([
+    'population',
+    'orbital_period',
+    'rotation_period',
+    'diameter',
+    'surface_water']);
 
   const filtraDados = (newFiltro) => {
     const filtroColuna = selected.column;
@@ -16,13 +23,16 @@ function Table() {
       setFiltrado(
         newFiltro.filter((planeta) => Number(planeta[filtroColuna]) > filtroNumero),
       );
+      setColunasOptions(optionsColumn.filter((column) => column !== selected.column));
     } if (selected.comparison === 'menor que') {
       setFiltrado(
         newFiltro.filter((planeta) => Number(planeta[filtroColuna]) < filtroNumero),
       );
+      setColunasOptions(optionsColumn.filter((column) => column !== selected.column));
     } if (selected.comparison === 'igual a') {
       setFiltrado(newFiltro
         .filter((planeta) => Number(planeta[filtroColuna]) === Number(filtroNumero)));
+      setColunasOptions(optionsColumn.filter((column) => column !== selected.column));
     }
   };
 
@@ -47,11 +57,9 @@ function Table() {
           ) => ({ ...prevSelected, column: target.value })) }
         >
           Coluna
-          <option value="population">population</option>
-          <option value="orbital_period">orbital_period</option>
-          <option value="rotation_period">rotation_period</option>
-          <option value="diameter">diameter</option>
-          <option value="surface_water">surface_water</option>
+          {optionsColumn.map((optionColumn, index) => (
+            <option key={ index }>{optionColumn}</option>
+          ))}
         </select>
         <select
           data-testid="comparison-filter"
@@ -81,6 +89,7 @@ function Table() {
           type="button"
           name="filtro"
           onClick={ () => {
+            setHistorySelected((prevPrevSelected) => ([...prevPrevSelected, selected]));
             const newFiltro = filtrado.length === 0 ? planetas : filtrado;
             filtraDados(newFiltro);
             setSelected({ column: 'population', comparison: 'maior que', number: '0' });
@@ -89,6 +98,17 @@ function Table() {
           Filtrar
         </button>
       </form>
+      {historySelected.map((history, index) => (
+        <div key={ index }>
+          <span>
+            {history.column}
+            {' '}
+            {history.comparison}
+            {' '}
+            {history.number}
+          </span>
+        </div>
+      )) }
       <table>
         <thead>
           <tr>
