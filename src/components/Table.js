@@ -1,114 +1,13 @@
-import React, { useState } from 'react';
+import React, { useContext } from 'react';
 import useFetch from '../hooks/useFetch';
+import StarContext from '../context/StarContext';
 
 function Table() {
-  const { loading, planetas } = useFetch();
-  const [filtro, setFiltro] = useState([]); // mudança no input nome
-  const [selected, setSelected] = useState({
-    column: 'population', comparison: 'maior que', number: '0' }); // mudança no input column, comparison e number
-  const [historySelected, setHistorySelected] = useState([]); // armazena os filtros selecionados
-  const [filtrado, setFiltrado] = useState([]); // seleciona info dos filtros
+  const { planetas } = useFetch();
+  const { filtro, filtrado } = useContext(StarContext);
   const newArray = filtrado.length === 0 ? planetas : filtrado;
-  const [optionsColumn, setColunasOptions] = useState([
-    'population',
-    'orbital_period',
-    'rotation_period',
-    'diameter',
-    'surface_water']);
-
-  const filtraDados = (newFiltro) => {
-    const filtroColuna = selected.column;
-    const filtroNumero = selected.number;
-    if (selected.comparison === 'maior que') {
-      setFiltrado(
-        newFiltro.filter((planeta) => Number(planeta[filtroColuna]) > filtroNumero),
-      );
-      setColunasOptions(optionsColumn.filter((column) => column !== selected.column));
-    } if (selected.comparison === 'menor que') {
-      setFiltrado(
-        newFiltro.filter((planeta) => Number(planeta[filtroColuna]) < filtroNumero),
-      );
-      setColunasOptions(optionsColumn.filter((column) => column !== selected.column));
-    } if (selected.comparison === 'igual a') {
-      setFiltrado(newFiltro
-        .filter((planeta) => Number(planeta[filtroColuna]) === Number(filtroNumero)));
-      setColunasOptions(optionsColumn.filter((column) => column !== selected.column));
-    }
-  };
-
   return (
     <div>
-      { loading && <h1>Carregando...</h1> }
-      <form>
-        <input
-          data-testid="name-filter"
-          type="text"
-          name="filtro"
-          value={ filtro }
-          onChange={ ({ target }) => setFiltro(target.value) }
-        />
-        <select
-          data-testid="column-filter"
-          type="select"
-          name="column"
-          value={ selected.column }
-          onChange={ ({ target }) => setSelected((
-            prevSelected,
-          ) => ({ ...prevSelected, column: target.value })) }
-        >
-          Coluna
-          {optionsColumn.map((optionColumn, index) => (
-            <option key={ index }>{optionColumn}</option>
-          ))}
-        </select>
-        <select
-          data-testid="comparison-filter"
-          type="select"
-          name="comparison"
-          value={ selected.comparison }
-          onChange={ ({ target }) => setSelected((
-            prevSelected,
-          ) => ({ ...prevSelected, comparison: target.value })) }
-        >
-          Operador
-          <option value="maior que">maior que</option>
-          <option value="menor que">menor que</option>
-          <option value="igual a">igual a</option>
-        </select>
-        <input
-          data-testid="value-filter"
-          type="number"
-          name="number"
-          value={ selected.number }
-          onChange={ ({ target }) => setSelected((
-            prevSelected,
-          ) => ({ ...prevSelected, number: target.value })) }
-        />
-        <button
-          data-testid="button-filter"
-          type="button"
-          name="filtro"
-          onClick={ () => {
-            setHistorySelected((prevPrevSelected) => ([...prevPrevSelected, selected]));
-            const newFiltro = filtrado.length === 0 ? planetas : filtrado;
-            filtraDados(newFiltro);
-            setSelected({ column: 'population', comparison: 'maior que', number: '0' });
-          } }
-        >
-          Filtrar
-        </button>
-      </form>
-      {historySelected.map((history, index) => (
-        <div key={ index }>
-          <span>
-            {history.column}
-            {' '}
-            {history.comparison}
-            {' '}
-            {history.number}
-          </span>
-        </div>
-      )) }
       <table>
         <thead>
           <tr>
