@@ -10,9 +10,8 @@ describe('1 - Faça uma requisição para o endpoint `/planets` da API de Star W
   //   }));
 
   //   render(
-  //     <DataProvider>
-  //       <App />
-  //     </DataProvider>
+  //     <App />
+  //    
   //   );
 
   //   expect(global.fetch).toHaveBeenCalled();

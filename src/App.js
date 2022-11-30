@@ -10,7 +10,7 @@ function App({ children }) {
   const [historySelected, setHistorySelected] = useState([]); // armazena os filtros selecionados
   const [filtrado, setFiltrado] = useState([]); // seleciona info dos filtros
   const [optionsColumn, setColunasOptions] = useState([
-    'population', 'orbital_period', 'rotation_period', 'diameter', 'surface_water']);
+    'surface_water', 'diameter', 'orbital_period', 'rotation_period', 'population']);
   const [selectedColumn, setSelectedColumn] = useState([]);
   const [optionsColumnSort, setColunasOptionsSort] = useState([
     'surface_water', 'diameter', 'orbital_period', 'rotation_period', 'population']);

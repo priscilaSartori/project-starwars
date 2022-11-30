@@ -12,28 +12,36 @@ function History() {
   } = useContext(StarContext);
 
   const removeFiltraDados = (history) => {
-    const igual = planetas.filter((planeta) => (Number(planeta[history
-      .column]) === Number(history.number)));
-    const menor = planetas.filter((planeta) => (Number(planeta[history
-      .column]) < history.number));
-    const maior = planetas.filter((planeta) => (Number(planeta[history
-      .column]) > history.number));
-    if (history.comparison === 'maior que') {
-      const somaMenor = [...menor, igual[0]];
-      somaMenor.map((restauraMenor) => setFiltrado(
-        (prevFiltrado) => ([...prevFiltrado, restauraMenor]),
-      ));
-    } if (history.comparison === 'menor que') {
-      const somaMaior = [...maior, igual[0]];
-      somaMaior.map((restauraMaior) => setFiltrado(
-        (prevFiltrado) => ([...prevFiltrado, restauraMaior]),
-      ));
-    } if (history.comparison === 'igual a') {
-      planetas.filter((planeta) => Number(planeta[history
-        .column]) !== Number(history.number))
-        .map((restaura) => setFiltrado((prevFiltrado) => ([...prevFiltrado, restaura])));
+    const historyAtualizado = historySelected
+      .filter((filterSelected) => filterSelected.column !== history.column);
+    if (historyAtualizado.length !== 0) {
+      historyAtualizado.forEach((atualizar) => {
+        if (atualizar.comparison === 'maior que') {
+          setFiltrado(planetas.filter(
+            (planeta) => Number(planeta[atualizar.column]) > atualizar.number,
+          ));
+        } else if (atualizar.comparison === 'menor que') {
+          setFiltrado(planetas
+            .filter((planeta) => Number(planeta[atualizar.column]) < atualizar.number));
+        } else if (atualizar.comparison === 'igual a') {
+          setFiltrado(planetas.filter(
+            (planeta) => Number(planeta[atualizar.column]) === Number(atualizar.number),
+          ));
+        }
+      });
+    } else {
+      setFiltrado(planetas);
     }
   };
+
+  const removeItem = (history) => {
+    removeFiltraDados(history);
+    setHistorySelected(historySelected
+      .filter((filterSelected) => filterSelected.column !== history.column));
+    setColunasOptions((prevColunasOptions) => (
+      [...prevColunasOptions, history.column]));
+  };
+
   return (
     <div>
       {historySelected.map((history, index) => (
@@ -49,13 +57,7 @@ function History() {
             type="button"
             name={ history.column }
             value={ history.column }
-            onClick={ () => {
-              removeFiltraDados(history);
-              setHistorySelected(historySelected
-                .filter((filterSelected) => filterSelected.column !== history.column));
-              setColunasOptions((prevColunasOptions) => (
-                [...prevColunasOptions, history.column]));
-            } }
+            onClick={ () => removeItem(history) }
           >
             Delete
           </button>

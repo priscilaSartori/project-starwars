@@ -17,6 +17,7 @@ function Filtros() {
   } = useContext(StarContext);
 
   const filtraDados = (newFiltro) => {
+    console.log(newFiltro);
     if (selected.comparison === 'maior que') {
       setFiltrado(
         newFiltro.filter((planeta) => Number(planeta[selected.column]) > selected.number),
@@ -86,6 +87,7 @@ function Filtros() {
           onClick={ () => {
             setHistorySelected((prevPrevSelected) => ([...prevPrevSelected, selected]));
             const newFiltro = filtrado.length === 0 ? planetas : filtrado;
+            console.log(newFiltro);
             filtraDados(newFiltro);
             setSelected({ column: optionsColumn[1],
               comparison: 'maior que',

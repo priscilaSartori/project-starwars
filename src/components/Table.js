@@ -6,6 +6,9 @@ function Table() {
   const { planetas } = useFetch();
   const { filtro, filtrado } = useContext(StarContext);
   const newArray = filtrado.length === 0 ? planetas : filtrado;
+  // console.log(planetas);
+  // console.log(filtrado);
+  // console.log(newArray);
   return (
     <div>
       <table>
