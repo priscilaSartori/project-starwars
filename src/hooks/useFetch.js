@@ -1,4 +1,5 @@
 import { useEffect, useState } from 'react';
+import { act } from 'react-dom/test-utils';
 
 export default function useFetch() {
   const [planetas, setPlanetas] = useState([]);
@@ -9,7 +10,7 @@ export default function useFetch() {
       const response = await fetch('https://swapi.dev/api/planets');
       const data = await response.json();
       setPlanetas(data.results);
-      setLoading(false);
+      act(() => { setLoading(false); });
     };
     fetchData();
   }, []);

@@ -55,6 +55,7 @@ function History() {
           </span>
           <button
             type="button"
+            data-testid={ history.column }
             name={ history.column }
             value={ history.column }
             onClick={ () => removeItem(history) }
