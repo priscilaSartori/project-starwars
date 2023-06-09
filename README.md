@@ -1,6 +1,7 @@
 <h1 align="center">Project Starwars</h1>
 
 <br />
+![img](projectIntro.gif)
  *** CSS EM CONSTRUÇÃO ***
 <br />
 
